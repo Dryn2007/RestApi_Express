@@ -1,52 +1,36 @@
-const dbPool = require("../config/database.js");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
-// Get All Users
-const getCallUsers = () => {
-  const SQLQuery = "SELECT * FROM users";
-  return dbPool.execute(SQLQuery);
+const getAllUsers = async () => {
+  return await prisma.user.findMany();
 };
 
-// Create New User
-const createNewUsers = (body) => {
-  const SQLQuery = `INSERT INTO users (username, email, password) 
-                      VALUES (?, ?, ?)`;
-  return dbPool.execute(SQLQuery, [body.username, body.email, body.password]);
+const createNewUser = async (body) => {
+  return await prisma.user.create({
+    data: {
+      username: body.username,
+      email: body.email,
+      password: body.password,
+    },
+  });
 };
 
-// Update User
-const updateUserById = (id, body) => {
-  let SQLQuery = "UPDATE users SET ";
-  const fields = [];
+const updateUserById = async (id, body) => {
+  return await prisma.user.update({
+    where: { id: parseInt(id) },
+    data: body,
+  });
+};
 
-  // Cek field mana yang dikirim dalam req.body
-  if (body.username) fields.push(`username = '${body.username}'`);
-  if (body.email) fields.push(`email = '${body.email}'`);
-  if (body.password) fields.push(`password = '${body.password}'`);
-
-  // Jika tidak ada field yang diubah, hentikan query
-  if (fields.length === 0) {
-    throw new Error("Tidak ada data yang diupdate");
-  }
-
-  SQLQuery += fields.join(", ") + ` WHERE id = '${id}'`;
-
-  return dbPool.execute(SQLQuery);
+const deleteUser = async (id) => {
+  return await prisma.user.delete({
+    where: { id: parseInt(id) },
+  });
 };
 
 module.exports = {
+  getAllUsers,
+  createNewUser,
   updateUserById,
-};
-
-
-// Delete User
-const deleteUsers = (id) => {
-  const SQLQuery = "DELETE FROM users WHERE id = ?";
-  return dbPool.execute(SQLQuery, [id]);
-};
-
-module.exports = {
-  getCallUsers,
-  createNewUsers,
-  updateUserById,
-  deleteUsers,
+  deleteUser,
 };
