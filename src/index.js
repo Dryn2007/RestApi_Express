@@ -8,7 +8,7 @@ const middlewareLogRequest = require("./middleware/logs.js");
 const upload = require("./middleware/multer.js");
 
 const app = express();
-const PORT = process.env.PORT || 4000; // Gunakan default port jika tidak ditemukan
+const PORT = process.env.PORT; // Gunakan default port jika tidak ditemukan
 
 app.use(middlewareLogRequest);
 app.use(express.json());
