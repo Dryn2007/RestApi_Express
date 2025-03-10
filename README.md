@@ -10,8 +10,8 @@ API ini dibuat menggunakan **Express.js** dan **Prisma ORM** dengan database **P
 Jalankan perintah berikut untuk meng-clone repository:  
 
 ```sh
-git clone https://github.com/USERNAME/REPO-NAME.git
-cd REPO-NAME
+https://github.com/Dryn2007/RestApi_Express.git
+cd RestApi_Express
 ```
 
 ---
