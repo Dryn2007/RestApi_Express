@@ -2,15 +2,24 @@
   "version": 2,
   "builds": [
     {
-      "src": "index.js",
+      "src": "src/index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "index.js"
+      "dest": "src/index.js"
     }
-  ]
+  ],
+  "env": {
+    "APP_ENV": "production",
+    "APP_DEBUG": "true",
+    "APP_URL": "https://express-mysql-hazel.vercel.app/",
+    "PORT": "4000",
+    "CACHE_DRIVER": "array",
+    "LOG_CHANNEL": "stderr",
+    "SESSION_DRIVER": "cookie",
+    "DATABASE_URL": "prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
 }
-  
