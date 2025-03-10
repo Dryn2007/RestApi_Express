@@ -1,25 +1,9 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "src/index.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "src/index.js"
-    }
-  ],
+  "builds": [{ "src": "api/index.js", "use": "@vercel/node" }],
+  "routes": [{ "src": "/(.*)", "dest": "api/index.js" }],
   "env": {
-    "APP_ENV": "production",
-    "APP_DEBUG": "true",
     "APP_URL": "https://express-mysql-hazel.vercel.app/",
-    "PORT": "4000",
-    "CACHE_DRIVER": "array",
-    "LOG_CHANNEL": "stderr",
-    "SESSION_DRIVER": "cookie",
-    "DATABASE_URL": "prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    "DATABASE_URL": "prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiNzE0N2M4YzItM2UxYy00YTZlLWJkZWQtNTg5YTRhMzg1Mzg4IiwidGVuYW50X2lkIjoiZmVhYmJhNzJhNTc2ZmEyMTlkYWI2YTI1MzMyYmFhMzczZDIzMWQxZjlkNmUzNGJjNThjYjU5NDZjMTA4ZThjYiIsImludGVybmFsX3NlY3JldCI6IjUxOTYzMzE4LWNhOTItNDI5OS05MzBiLTRlODdmNjQ2MWI1OSJ9.S6ILabCE4fjEiMGs8lGU27j3pJxxKR0RfK-zg0o-1Tw"
   }
 }
