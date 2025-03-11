@@ -8,7 +8,7 @@ const getAllUsers = async () => {
 const createNewUser = async (body) => {
   return await prisma.user.create({
     data: {
-      username: body.username,
+      name: body.name,
       email: body.email,
       password: body.password,
     },
