@@ -12,6 +12,38 @@ const router = express.Router();
 
 /**
  * @swagger
+ * /api/users/auth/clerk:
+ *   post:
+ *     summary: Autentikasi pengguna dengan Clerk
+ *     tags: [Users]
+ *     description: Endpoint untuk login atau registrasi pengguna menggunakan Clerk.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               clerkId:
+ *                 type: string
+ *                 example: "clerk_user_123"
+ *               email:
+ *                 type: string
+ *                 example: "user@example.com"
+ *               name:
+ *                 type: string
+ *                 example: "John Doe"
+ *     responses:
+ *       200:
+ *         description: User berhasil diautentikasi
+ *       500:
+ *         description: Kesalahan server
+ */
+router.post("/auth/clerk", usersController.getOrCreateUserWithClerk);
+
+
+/**
+ * @swagger
  * /api/users:
  *   post:
  *     summary: Membuat user baru

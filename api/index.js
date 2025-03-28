@@ -9,6 +9,8 @@ const path = require("path");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUiExpress = require("swagger-ui-express");
 
+const PORT = process.env.PORT || 4000;
+
 const options = {
   failOnErrors: true,
   definition: {
@@ -44,7 +46,7 @@ app.use(
     ],
   })
 );
-
+    
 
 
 app.use("/api/users", usersRoutes);
@@ -57,6 +59,10 @@ app.post("/upload", upload.single("photo"), (req, res) => {
 // Error Handling Middleware
 app.use((err, req, res, next) => {
   res.status(500).json({ message: err.message });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server berjalan di http://localhost:${PORT}`);
 });
 
 // Export Handler untuk Vercel
