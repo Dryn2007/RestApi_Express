@@ -1,11 +1,15 @@
-const { PrismaClient } = require("@prisma/client");
+import { PrismaClient } from "@prisma/client";
+
 const prisma = new PrismaClient();
 
-const getAllUsers = async () => {
-  return await prisma.user.findMany();
+export const getAllUsers = async () => {
+  return await prisma.user.findMany({
+    select: { id: true, firstName: true, lastName: true, email: true },
+  });
 };
 
-const createNewUser = async (body) => {
+
+export const createNewUser = async (body) => {
   return await prisma.user.create({
     data: {
       name: body.name,
@@ -15,22 +19,15 @@ const createNewUser = async (body) => {
   });
 };
 
-const updateUserById = async (id, body) => {
+export const updateUserById = async (id, body) => {
   return await prisma.user.update({
     where: { id: parseInt(id) },
     data: body,
   });
 };
 
-const deleteUser = async (id) => {
+export const deleteUser = async (id) => {
   return await prisma.user.delete({
     where: { id: parseInt(id) },
   });
-};
-
-module.exports = {
-  getAllUsers,
-  createNewUser,
-  updateUserById,
-  deleteUser,
 };

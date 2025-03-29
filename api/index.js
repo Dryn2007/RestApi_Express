@@ -1,15 +1,19 @@
-require("dotenv").config();
-const express = require("express");
+import "dotenv/config";
+import express from "express";
+import usersRoutes from "./routes/users.js"; // Sesuaikan path dengan struktur Vercel
+import middlewareLogRequest from "./middleware/logs.js";
+import upload from "./middleware/multer.js";
+import cors from "cors";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const usersRoutes = require("./routes/users.js"); // Sesuaikan path dengan struktur Vercel
-const middlewareLogRequest = require("./middleware/logs.js");
-const upload = require("./middleware/multer.js");
 
-const path = require("path");
-const swaggerJsdoc = require("swagger-jsdoc");
-const swaggerUiExpress = require("swagger-ui-express");
-
-
+// Menentukan __dirname di ES Module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const PORT = process.env.PORT || 4000;
 
 const options = {
   failOnErrors: true,
@@ -31,9 +35,8 @@ const app = express();
 app.use(middlewareLogRequest);
 app.use(express.json());
 app.use("/images", express.static(path.join(__dirname, "./images"))); // Sesuaikan path
-
-const cors = require("cors");
 app.use(cors());
+
 app.use(
   "/docs",
   swaggerUiExpress.serve,
@@ -46,8 +49,6 @@ app.use(
     ],
   })
 );
-    
-
 
 app.use("/api/users", usersRoutes);
 
@@ -59,8 +60,15 @@ app.post("/upload", upload.single("photo"), (req, res) => {
 // Error Handling Middleware
 app.use((err, req, res, next) => {
   res.status(500).json({ message: err.message });
+  
 });
 
+app.get("/", (req, res) => {
+  res.send("Server is running...");
+});
 
-// Export Handler untuk Vercel
-module.exports = app;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
+// Export untuk Vercel
+export default app;

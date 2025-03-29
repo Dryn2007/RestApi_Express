@@ -1,12 +1,10 @@
-const usersModel = require("../models/users");
-const { PrismaClient } = require("@prisma/client");
+import { PrismaClient } from "@prisma/client";
+import * as usersModel from "../models/users.js";
 
 const prisma = new PrismaClient();
 
-
 // 🔥 Login atau Registrasi dengan Clerk
-const getOrCreateUserWithClerk = async (req, res) => {
-  try {
+export const getOrCreateUserWithClerk = async (req, res) => {  try {
     const { clerkId, email, name } = req.body; // Data dari frontend (Clerk)
 
     if (!clerkId || !email) {
@@ -33,7 +31,6 @@ const getOrCreateUserWithClerk = async (req, res) => {
       message: "User authenticated",
       user,
     });
-
   } catch (error) {
     return res.status(500).json({
       message: "Server error",
@@ -80,7 +77,7 @@ const updateUser = async (req, res) => {
   const { id } = req.params;
   const body = req.body;
   try {
-    const updatedUser = await usersModel.updateUserById(id, body);
+    const updatedUser = await usersModel.updateUser(id, body);
     res.status(200).json({
       message: "User updated successfully",
       data: updatedUser,
@@ -109,10 +106,9 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = {
+export default {
   getAllUsers,
   createNewUser,
   updateUser,
   deleteUser,
-  getOrCreateUserWithClerk,
 };

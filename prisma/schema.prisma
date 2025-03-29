@@ -15,9 +15,10 @@ datasource db {
 
 model User {
   id       Int     @id @default(autoincrement())
-  name String   
+  clerkId     String  @unique // ID dari Clerk
   email    String  @unique
-  password String
+  firstName   String?
+  lastName    String?
   createdAt DateTime @default(now())
 }
 

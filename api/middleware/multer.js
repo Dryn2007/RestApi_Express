@@ -1,5 +1,5 @@
-const multer = require("multer");
-const path = require("path");
+import multer from "multer";
+import path from "path";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -10,14 +10,14 @@ const storage = multer.diskStorage({
     const originalname = file.originalname;
 
     cb(null, `${timestamp}-${originalname}`);
-  }
+  },
 });
 
 const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 3 * 1000 * 1000 // 3mb
-    }
+  storage: storage,
+  limits: {
+    fileSize: 3 * 1000 * 1000, // 3MB
+  },
 });
 
-module.exports = upload;
+export default upload;

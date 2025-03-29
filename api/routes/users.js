@@ -1,7 +1,13 @@
-const express = require("express");
-const usersController = require("../controller/users.js");
+import express from "express";
+import { PrismaClient } from "@prisma/client";
+import { requireAuth } from "@clerk/express";
+import usersController from "../controller/users.js"; // Pastikan ini diubah juga ke ES Module
+import { users } from "@clerk/clerk-sdk-node";
+import "dotenv/config";
+
 
 const router = express.Router();
+const prisma = new PrismaClient();
 
 /**
  * @swagger
@@ -12,35 +18,50 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/users/auth/clerk:
+ * /api/users/sync-user:
  *   post:
- *     summary: Autentikasi pengguna dengan Clerk
+ *     summary: Sinkronisasi user Clerk dengan database Prisma
  *     tags: [Users]
- *     description: Endpoint untuk login atau registrasi pengguna menggunakan Clerk.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               clerkId:
- *                 type: string
- *                 example: "clerk_user_123"
- *               email:
- *                 type: string
- *                 example: "user@example.com"
- *               name:
- *                 type: string
- *                 example: "John Doe"
+ *     description: Memeriksa apakah user sudah ada di database, jika belum, akan disimpan.
  *     responses:
  *       200:
- *         description: User berhasil diautentikasi
+ *         description: User berhasil disinkronisasi
+ *       401:
+ *         description: Unauthorized
  *       500:
- *         description: Kesalahan server
+ *         description: Internal Server Error
  */
-router.post("/auth/clerk", usersController.getOrCreateUserWithClerk);
+router.post("/sync-user", requireAuth(), async (req, res) => {
+  try {
+    const { userId } = req.auth;
 
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const user = await users.getUser(userId);
+
+    let existingUser = await prisma.user.findUnique({
+      where: { clerkId: user.id },
+    });
+
+    if (!existingUser) {
+      existingUser = await prisma.user.create({
+        data: {
+          clerkId: user.id,
+          email: user.emailAddresses[0].emailAddress,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        },
+      });
+    }
+
+    return res.json(existingUser);
+  } catch (error) {
+    console.error("Error syncing user:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 /**
  * @swagger
@@ -148,4 +169,4 @@ router.patch("/:id", usersController.updateUser);
  */
 router.delete("/:id", usersController.deleteUser);
 
-module.exports = router;
+export default router;
